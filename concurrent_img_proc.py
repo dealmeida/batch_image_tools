@@ -1,19 +1,28 @@
 #!/usr/local/bin/python3
 # -*- coding: UTF-8 -*-
 
-"""
+"""Batch Images Processing
+
+Usage:
+  concurrent_img_proc.py <source_path> <dest_path>
+  concurrent_img_proc.py -h
+  concurrent_img_proc.py --version
+
 Reads images and produces processed (e.g. blurred, thumbnail) versions
 using concurrent independent processes
 
-Usage: concurrent_img_proc.py ORIGINAL_IMGS_PATH PROCESSED_IMGS_PATH
+Arguments:
+    <source_path> source images directory path
+    <dest_path>   processed images directory path
 
-ToDo:
-- Number of processes should be passed as argument
-- File extension should be passed as an argument
-- Client should be able to chose among different types of img processing
-
+Options:
+    -h --help          Display this help
+    --version          Display version
+ 
+Give us your feedback.
 """
 
+import docopt
 import glob
 import os
 import profile
@@ -24,8 +33,10 @@ from PIL import ImageFilter
 
 import concurrent.futures
 
+
 NB_OF_PROCESSES = 2
 new_imgs_path = ""
+
 
 def make_image_blur(original_img):
 
@@ -69,8 +80,14 @@ def launch_process(original_imgs_path):
             blur_file = make_image_blur(orig_file)
             print(f"Image '{blur_file}' is ready \n\n")
 
-
 if __name__ == '__main__':
-    new_imgs_path = sys.argv[2]
-    launch_process(sys.argv[1])
+    arguments = docopt.docopt(__doc__, version='0.1')  # parse arguments based on script docstring     
+    new_imgs_path = arguments['<dest_path>']
+    launch_process(arguments['<source_path>'])
+
+
+#   ToDo:
+#- Number of processes should be passed as argument
+# File extension should be passed as an argument
+#- Client should be able to chose among different types of img processing
 
