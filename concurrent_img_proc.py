@@ -4,7 +4,7 @@
 """Batch Images Processing
 
 Usage:
-  concurrent_img_proc.py <source_path> <dest_path>
+  concurrent_img_proc.py <file_type> <source_path> <dest_path>
   concurrent_img_proc.py -h
   concurrent_img_proc.py --version
 
@@ -14,6 +14,7 @@ using concurrent independent processes
 Arguments:
     <source_path> source images directory path
     <dest_path>   processed images directory path
+    <file_type>   image file type extension  can be one of the following: JPEG, PNG, TIFF, GIF
 
 Options:
     -h --help          Display this help
@@ -36,6 +37,7 @@ import concurrent.futures
 
 NB_OF_PROCESSES = 2
 new_imgs_path = ""
+img_file_ext = ""
 
 
 def make_image_blur(original_img):
@@ -57,7 +59,7 @@ def make_image_blur(original_img):
     # Create and save thumbnail image
     image = Image.open(original_img)
     blurred = image.filter(ImageFilter.BLUR)
-    blurred.save(blur_filename, "JPEG")
+    blurred.save(blur_filename, img_file_ext)
     return blur_filename
 
 
@@ -83,11 +85,12 @@ def launch_process(original_imgs_path):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='0.1')  # parse arguments based on script docstring     
     new_imgs_path = arguments['<dest_path>']
+    img_file_ext = arguments['<file_type>']
+    print(img_file_ext)
     launch_process(arguments['<source_path>'])
-
 
 #   ToDo:
 #- Number of processes should be passed as argument
-# File extension should be passed as an argument
-#- Client should be able to chose among different types of img processing
-
+#- Client should be able to chose among different types of img processing (e.g;, thumbnails, blur, etc)
+#- Test if source and dest directory exists
+#- Test if the file format is recognized
